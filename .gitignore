@@ -3,5 +3,6 @@
 node_modules/
 
 flexilease
+flexilease.sqbpro
 
 *.db
