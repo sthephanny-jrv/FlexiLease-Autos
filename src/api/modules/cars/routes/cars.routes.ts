@@ -1,14 +1,16 @@
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 import CarsController from '../controller/CarsController';
+import isAuthenticated from 'src/api/middlewares/authentication/isAuthenticated';
 
 const carsRouter = Router();
 const carsController = new CarsController();
 
-carsRouter.get('/car', carsController.list);
+carsRouter.get('/car', isAuthenticated, carsController.list);
 
 carsRouter.post(
   '/car',
+  isAuthenticated,
   celebrate({
     [Segments.BODY]: {
       model: Joi.string().required(),
@@ -26,6 +28,7 @@ carsRouter.post(
 
 carsRouter.delete(
   '/car/:id',
+  isAuthenticated,
   celebrate({
     [Segments.PARAMS]: {
       id: Joi.number().required(),
@@ -36,6 +39,7 @@ carsRouter.delete(
 
 carsRouter.get(
   '/car/:id',
+  isAuthenticated,
   celebrate({
     [Segments.PARAMS]: {
       id: Joi.number().required(),
@@ -46,6 +50,7 @@ carsRouter.get(
 
 carsRouter.put(
   '/car/:id',
+  isAuthenticated,
   celebrate({
     [Segments.PARAMS]: {
       id: Joi.number().required(),
@@ -66,6 +71,7 @@ carsRouter.put(
 
 carsRouter.patch(
   '/car/:id',
+  isAuthenticated,
   celebrate({
     [Segments.PARAMS]: {
       id: Joi.number().required(),

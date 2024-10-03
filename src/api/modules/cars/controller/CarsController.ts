@@ -58,7 +58,8 @@ export default class CarsController {
 
     const car = await carService.showCar(idCar);
 
-    return response.status(200).json(car);
+    const carDTO = new CarDTO(car);
+    return response.status(200).json(carDTO);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
