@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import Reserve from 'src/api/modules/reservations/typeorm/entities/Reserve';
 
 import { Exclude } from 'class-transformer';
 
@@ -22,7 +24,7 @@ class Car {
   @Column()
   year: number;
 
-  @Column()
+  @Column('decimal', { precision: 10, scale: 2 })
   valuePerDay: number;
 
   @Column('simple-array')
@@ -30,6 +32,9 @@ class Car {
 
   @Column()
   numberOfPassengers: number;
+
+  @OneToMany(() => Reserve, reserve => reserve.car)
+  reservations: Reserve[];
 
   @CreateDateColumn()
   @Exclude()

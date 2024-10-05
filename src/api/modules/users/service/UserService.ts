@@ -25,6 +25,19 @@ export default class UserService {
   }: IRequest): Promise<User> {
     const userRepository = getCustomRepository(UserRepository);
 
+    function isValidDate(dateString: string): boolean {
+      const dateRegex = /^\d{2}[-\/]\d{2}[-\/]\d{4}$/;
+      return dateRegex.test(dateString);
+    }
+
+    if (!isValidDate(birth)) {
+      throw new AppError(
+        'Invalid date format. Use DD/MM/YYYY',
+        'Bad Request',
+        400,
+      );
+    }
+
     const standardizedBirth = birth.replace(/\//g, '-');
 
     const [day, month, year] = standardizedBirth.split('-').map(Number);
@@ -143,7 +156,7 @@ export default class UserService {
     const user = await userRepository.findById(id);
 
     if (!user) {
-      throw new AppError(`Car not found`, 'Not Found', 404);
+      throw new AppError(`User not found`, 'Not Found', 404);
     }
 
     await userRepository.remove(user);

@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import Reserve from 'src/api/modules/reservations/typeorm/entities/Reserve';
 
 import { Exclude } from 'class-transformer';
 
@@ -48,6 +50,9 @@ class User {
 
   @Column()
   uf: string;
+
+  @OneToMany(() => Reserve, reserve => reserve.user)
+  reservations: Reserve[];
 
   @CreateDateColumn()
   @Exclude()

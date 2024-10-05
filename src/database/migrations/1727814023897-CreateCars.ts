@@ -27,7 +27,9 @@ export class CreateCars1727814023897 implements MigrationInterface {
           },
           {
             name: 'valuePerDay',
-            type: 'INTEGER',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
           },
           {
             name: 'acessories',
