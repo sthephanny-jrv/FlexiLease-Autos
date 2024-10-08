@@ -62,17 +62,21 @@ Siga as instruções abaixo para rodar o projeto:
 
       npm install
 
-3 - Para rodar o projeto digite o comando abaixo no terminal do projeto:
+3 - Execute esse comando para rodar as migrações e criar o banco de dados:
+
+      npm run typeorm migration:run
+
+4 - Para rodar o projeto digite o comando abaixo no terminal do projeto:
 
       npm run dev
 
 Feito isso a plicação deve estar rodando na porta 3000 (localholst:3000)
 
-4 - Abra o Postman ou o Insomnia para utilizar o projeto através das rotas.
+**OBS.:** Após cumprir estes 4 passos ao executar o projeto pela primeira vez, nas próximas vezes que desejar inicializar a aplicação para utilizar o projeto basta realizar novamente o passo 4 (utilizar o comando `npm run dev` no terminal).
 
-**5 - LEMBRETE**:
+5 - Abra o Postman ou o Insomnia para utilizar o projeto através das rotas.
 
-`!!! Todas as rotas de carros, reservas e usuários exigem autenticação, exceto as rotas de criação e autenticação de usuário. Para acessar as outras rotas da API, primeiro crie um usuário com "POST /user" e depois autentique-o com "POST /auth", gerando um token de acesso com validade de 12 horas. Durante esse período, o token deve ser usado como Bearer Token no campo Authorization. Quando o token expirar, será necessário autenticar novamente para gerar um novo.`
+6 - `LEMBRETE`: Todas as rotas de carros, reservas e usuários exigem autenticação, exceto as rotas de criação e autenticação de usuário. Para acessar as outras rotas da API, primeiro crie um usuário com "POST /user" e depois autentique-o com "POST /auth", gerando um token de acesso com validade de 12 horas. Durante esse período, o token deve ser usado como Bearer Token no campo Authorization. Quando o token expirar, será necessário autenticar novamente para gerar um novo.
 
 # Rotas
 
