@@ -72,7 +72,7 @@ Feito isso a plicação deve estar rodando na porta 3000 (localholst:3000)
 
 **5 - LEMBRETE**:
 
-      !!! Todas as rotas de carros, reservas e usuários exigem autenticação, exceto as rotas de criação e autenticação de usuário. Para acessar as outras rotas da API, primeiro crie um usuário com "POST /user" e depois autentique-o com "POST /auth", gerando um token de acesso com validade de 12 horas. Durante esse período, o token deve ser usado como Bearer Token no campo Authorization. Quando o token expirar, será necessário autenticar novamente para gerar um novo.
+`!!! Todas as rotas de carros, reservas e usuários exigem autenticação, exceto as rotas de criação e autenticação de usuário. Para acessar as outras rotas da API, primeiro crie um usuário com "POST /user" e depois autentique-o com "POST /auth", gerando um token de acesso com validade de 12 horas. Durante esse período, o token deve ser usado como Bearer Token no campo Authorization. Quando o token expirar, será necessário autenticar novamente para gerar um novo.`
 
 # Rotas
 
