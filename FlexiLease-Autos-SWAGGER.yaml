@@ -227,6 +227,53 @@ paths:
         '400':
           description: Invalid request.
 
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Get user details
+      description: Returns details of the authenticated user. Requires JWT authentication.
+      responses:
+        '200':
+          description: User successfully retrieved.
+        '404':
+          description: User not found.
+
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Update user information
+      description: Updates the authenticated user's information. Requires JWT authentication.
+      requestBody:
+        description: Updated user data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_Response'
+      responses:
+        '200':
+          description: User successfully updated.
+        '400':
+          description: Invalid request.
+        '404':
+          description: User not found.
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Delete user
+      description: Deletes the authenticated user. Requires JWT authentication.
+      responses:
+        '204':
+          description: User successfully deleted.
+        '404':
+          description: User not found.
+
   /auth:
     post:
       tags:
