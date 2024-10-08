@@ -62,6 +62,7 @@ export default class UserController {
     const userService = new UserService();
 
     const user = await userService.updateUser(
+      id,
       name,
       cpf,
       birth,
@@ -73,7 +74,6 @@ export default class UserController {
       complement,
       city,
       uf,
-      id,
     );
 
     const userDTO = new UserDTO(user);

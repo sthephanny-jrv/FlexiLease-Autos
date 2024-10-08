@@ -163,18 +163,18 @@ export default class UserService {
   }
 
   public async updateUser(
-    name: string,
-    cpf: string,
-    birth: string,
-    cep: string,
-    email: string,
-    password: string,
-    neighbordhood: string,
-    street: string,
-    complement: string,
-    city: string,
-    uf: string,
     id: number,
+    name?: string,
+    cpf?: string,
+    birth?: string,
+    cep?: string,
+    email?: string,
+    password?: string,
+    neighbordhood?: string,
+    street?: string,
+    complement?: string,
+    city?: string,
+    uf?: string,
   ): Promise<User> {
     const userRepository = getCustomRepository(UserRepository);
 
@@ -184,53 +184,75 @@ export default class UserService {
       throw new AppError('User not found', 'Not Found', 404);
     }
 
-    const standardizedBirth = birth.replace(/\//g, '-');
+    if (birth) {
+      const standardizedBirth = birth.replace(/\//g, '-');
+      const [day, month, year] = standardizedBirth.split('-').map(Number);
+      const birthDate = new Date(year, month - 1, day);
 
-    const [day, month, year] = standardizedBirth.split('-').map(Number);
-    const birthDate = new Date(year, month - 1, day);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDifference = today.getMonth() - birthDate.getMonth();
+      if (
+        monthDifference < 0 ||
+        (monthDifference === 0 && today.getDate() < birthDate.getDate())
+      ) {
+        age--;
+      }
 
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-    if (
-      monthDifference < 0 ||
-      (monthDifference === 0 && today.getDate() < birthDate.getDate())
-    ) {
-      age--;
+      let qualifiedd = false;
+      if (age >= 18) {
+        qualifiedd = true;
+      }
+      user.qualified = qualifiedd;
+      user.birth = `${day
+        .toString()
+        .padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`;
     }
 
-    let qualified = false;
-    if (age >= 18) {
-      qualified = true;
+    if (cpf) {
+      const formattedCpf = cpf.replace(/[^\d]/g, '');
+
+      if (!this.isValidCpf(formattedCpf)) {
+        throw new AppError('Invalid CPF', 'Bad request', 400);
+      }
+
+      const existingCpf = await userRepository.findOne({
+        where: { cpf: formattedCpf },
+      });
+
+      if (existingCpf && existingCpf.id !== id) {
+        throw new AppError('CPF already exists', 'Bad request', 400);
+      }
+
+      user.cpf = formattedCpf;
     }
 
-    const formattedCpf = cpf.replace(/[^\d]/g, '');
+    if (email) {
+      const existingEmail = await userRepository.findOne({
+        where: { email },
+      });
 
-    if (!this.isValidCpf(formattedCpf)) {
-      throw new AppError('Invalid CPF', 'Bad request', 400);
+      if (existingEmail && existingEmail.id !== id) {
+        throw new AppError('Email already exists', 'Bad request', 400);
+      }
+
+      user.email = email;
     }
 
-    const existingCpf = await userRepository.findOne({
-      where: { cpf: formattedCpf },
-    });
+    if (cep) {
+      const viaCepUrl = `https://viacep.com.br/ws/${cep.replace('-', '')}/json`;
+      const { data } = await axios.get(viaCepUrl);
 
-    if (existingCpf && existingCpf.id !== id) {
-      throw new AppError('CPF already exists', 'Bad request', 400);
-    }
+      if (!data || data.erro) {
+        throw new AppError('Invalid CEP', 'Bad request', 400);
+      }
 
-    const existingEmail = await userRepository.findOne({
-      where: { email },
-    });
-
-    if (existingEmail && existingEmail.id !== id) {
-      throw new AppError('Email already exists', 'Bad request', 400);
-    }
-
-    const viaCepUrl = `https://viacep.com.br/ws/${cep.replace('-', '')}/json`;
-    const { data } = await axios.get(viaCepUrl);
-
-    if (!data || data.erro) {
-      throw new AppError('Invalid CEP', 'Bad request', 400);
+      user.cep = cep;
+      user.neighbordhood = data.bairro;
+      user.street = data.logradouro;
+      user.complement = data.complemento || complement;
+      user.city = data.localidade;
+      user.uf = data.uf;
     }
 
     if (password) {
@@ -238,19 +260,12 @@ export default class UserService {
       user.password = hashedPassword;
     }
 
-    user.name = name;
-    user.cpf = formattedCpf;
-    user.birth = `${day
-      .toString()
-      .padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`;
-    user.cep = cep;
-    user.email = email;
-    user.qualified = qualified;
-    user.neighbordhood = data.bairro;
-    user.street = data.logradouro;
-    user.complement = data.complemento;
-    user.city = data.localidade;
-    user.uf = data.uf;
+    if (name) user.name = name;
+    if (neighbordhood) user.neighbordhood = neighbordhood;
+    if (street) user.street = street;
+    if (complement) user.complement = complement;
+    if (city) user.city = city;
+    if (uf) user.uf = uf;
 
     await userRepository.save(user);
 
