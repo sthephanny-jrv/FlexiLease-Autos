@@ -1,0 +1,487 @@
+openapi: 3.0.3
+info:
+  title: FlexiLease Autos
+  description: "**-- PORTUGUÊS:**  \n **Descrição:**  \n Uma API RESTful completa para um sistema de aluguel de carros. Gerencia carros, reservas e usuários, com autenticação JWT e integração ViaCEP API.  \n  **Lembrete**:  \n Todas as rotas de carros, reservas e usuários exigem autenticação, exceto as rotas de criação e autenticação de usuário. Para acessar as outras rotas da API, primeiro crie um usuário com POST /user e depois autentique-o com POST /auth, gerando um token de acesso com validade de 12 horas. Durante esse período, o token deve ser usado como Bearer Token no campo Authorization. Quando o token expirar, será necessário autenticar novamente para gerar um novo.  \n  \n  **-- ENGLISH:**  \n **Description:**  \n A complete RESTful API for a car rental system. Manage cars, reservations, and users, with JWT authentication and ViaCEP API integration.  \n  **Reminder**:  \n All car, booking, and user routes require authentication, except for the create and authenticate user routes. To access the other API routes, first create a user with POST /user and then authenticate the user with POST /auth, generating an access token that is valid for 12 hours. During this period, the token should be used as the Bearer Token in the Authorization field. When the token expires, you will need to authenticate again to generate a new one."
+
+  contact:
+    name: Sthephanny Jamilly
+    email: sthephanny.jrv@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/v1
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User_Request:
+      type: object
+      required:
+        - name
+        - cpf
+        - birth
+        - cep
+        - email
+        - password
+      properties:
+        name:
+          type: string
+        cpf:
+          type: string
+        birth:
+          type: string
+          format: date
+        cep:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+
+    User_Response:
+      type: object
+      required:
+        - id
+        - name
+        - cpf
+        - birth
+        - cep
+        - email
+        - password
+        - qualified
+        - city
+        - uf
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        cpf:
+          type: string
+        birth:
+          type: string
+          format: date
+        cep:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        qualified:
+          type: boolean
+        neighborhood:
+          type: string
+        street:
+          type: string
+        complement:
+          type: string
+        city:
+          type: string
+        uf:
+          type: string
+
+    Auth_Request:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    Auth_Response:
+      type: object
+      required:
+        - accessToken
+      properties:
+        accessToken:
+          type: string
+          description: JWT token generated for authentication
+
+    Car_Request:
+      type: object
+      required:
+        - model
+        - color
+        - year
+        - valuePerDay
+        - acessories
+        - numberOfPassengers
+      properties:
+        model:
+          type: string
+        color:
+          type: string
+        year:
+          type: integer
+        valuePerDay:
+          type: number
+        acessories:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+        numberOfPassengers:
+          type: integer
+
+    Car_Response:
+      type: object
+      required:
+        - id
+        - model
+        - color
+        - year
+        - valuePerDay
+        - acessories
+        - numberOfPassengers
+      properties:
+        id:
+          type: integer
+        model:
+          type: string
+        color:
+          type: string
+        year:
+          type: integer
+        valuePerDay:
+          type: number
+        acessories:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+        numberOfPassengers:
+          type: integer
+
+    Reservation_Request:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - carId
+      properties:
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        carId:
+          type: integer
+
+    Reservation_Response:
+      type: object
+      required:
+        - id
+        - startDate
+        - endDate
+        - finalValue
+        - userId
+        - carId
+      properties:
+        id:
+          type: integer
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        finalValue:
+          type: number
+        userId:
+          type: integer
+        carId:
+          type: integer
+
+security:
+  - bearerAuth: []
+
+paths:
+  /user:
+    post:
+      tags:
+        - User
+      summary: Register a new user
+      description: Registers a new user.
+      requestBody:
+        description: User registration data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_Request'
+      responses:
+        '201':
+          description: User successfully registered! Full address retrieved from ViaCEP API.
+        '400':
+          description: Invalid request.
+
+  /auth:
+    post:
+      tags:
+        - Authentication
+      summary: Authenticate a user
+      description: Generates an authentication token for the user.
+      requestBody:
+        description: User authentication data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auth_Request'
+      responses:
+        '200':
+          description: Authentication successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auth_Response'
+        '400':
+          description: Invalid credentials.
+
+  /car:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Car
+      summary: Register a new car
+      description: Creates a new car. Requires JWT authentication.
+      requestBody:
+        description: Car registration data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Car_Request'
+      responses:
+        '201':
+          description: Car successfully registered.
+          content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Car_Response'
+        '400':
+          description: Invalid request.
+
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Car
+      summary: List all cars
+      description: Lists all available cars. Requires JWT authentication.
+      parameters:
+        - name: year
+          in: query
+          description: Filter cars by year.
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Number of results per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: Page offset.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Cars successfully retrieved.
+        '404':
+          description: No cars found.
+
+  /car/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Car
+      summary: Get car by ID
+      description: Return a specific car. Requires JWT authentication.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Car successfully retrieved.
+        '404':
+          description: Car not found.
+
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Car
+      summary: Update car information
+      description: Updates a car. Requires JWT authentication.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Updated car
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Car_Request'
+      responses:
+        '200':
+          description: Car successfully updated.
+        '400':
+          description: Invalid request.
+        '404':
+          description: Car not found.
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Car
+      summary: Delete car by ID
+      description: Removes a car. Requires JWT authentication.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Car successfully deleted.
+        '404':
+          description: Car not found.
+
+  /reserve:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reservation
+      summary: Register a new reservation
+      description: Creates a reservation for a car. Requires JWT authentication.
+      requestBody:
+        description: Reservation data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation_Request'
+      responses:
+        '201':
+          description: Reservation successfully created.
+        '400':
+          description: Invalid request.
+
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reservation
+      summary: List all reservations for the authenticated user
+      description: Retrieves the reservations. Requires JWT authentication.
+      parameters:
+        - name: finalValue
+          in: query
+          description: Filter reservations by final value.
+          schema:
+            type: number
+        - name: limit
+          in: query
+          description: Number of results per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: Page offset.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Reservations successfully retrieved.
+        '404':
+          description: No reservations found.
+
+  /reserve/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reservation
+      summary: Get reservation by ID
+      description: Returns details of a specific reservation. Requires JWT authentication.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Reservation successfully retrieved.
+        '404':
+          description: Reservation not found.
+
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reservation
+      summary: Update reservation by ID
+      description: Updates the reservation. Requires JWT authentication.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Updated reservation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation_Request'
+      responses:
+        '200':
+          description: Reservation successfully updated.
+        '400':
+          description: Invalid request.
+        '404':
+          description: Reservation not found.
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reservation
+      summary: Delete reservation by ID
+      description: Removes a reservation. Requires JWT authentication.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Reservation successfully deleted.
+        '404':
+          description: Reservation not found.
