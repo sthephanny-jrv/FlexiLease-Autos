@@ -7,10 +7,18 @@ import bodyParser from 'body-parser';
 import { errors } from 'celebrate';
 import AppError from './api/middlewares/errors/AppError';
 
+import swaggerUI from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'path';
+
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const swaggerPath = path.join(__dirname, '../FlexiLease-Autos-SWAGGER.yaml');
+const swaggerDocument = YAML.load(swaggerPath);
+app.use('/v1/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use('/v1', routes);
 

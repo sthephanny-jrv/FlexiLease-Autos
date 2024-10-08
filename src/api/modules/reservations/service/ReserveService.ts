@@ -77,7 +77,12 @@ export default class ReserveService {
     const days = time / (1000 * 60 * 60 * 24);
 
     const valuePerDay = car.valuePerDay;
-    const finalValue = valuePerDay * days;
+    let finalValue: number;
+    if (startDateDate.getTime() === endDateDate.getTime()) {
+      finalValue = valuePerDay;
+    } else {
+      finalValue = valuePerDay * days;
+    }
 
     if (startDateDate > endDateDate) {
       throw new AppError(

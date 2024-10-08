@@ -169,7 +169,7 @@ export default class CarService {
       throw new AppError(`Car not found`, 'Not Found', 404);
     }
 
-    if (acessories.length == 0) {
+    if (acessories && acessories.length === 0) {
       throw new AppError(
         `You must have at least ONE accessory`,
         'Bad request',
@@ -177,17 +177,23 @@ export default class CarService {
       );
     }
 
-    const namesAccessory = acessories.map(accessory => accessory.name);
-    const duplicates = namesAccessory.filter(
-      (name, index, arr) => arr.indexOf(name) !== index,
-    );
-
-    if (duplicates.length > 0) {
-      throw new AppError(
-        `There can be no repeated accessories`,
-        'Bad request',
-        400,
+    if (acessories) {
+      const namesAccessory = acessories.map(accessory => accessory.name);
+      const duplicates = namesAccessory.filter(
+        (name, index, arr) => arr.indexOf(name) !== index,
       );
+
+      if (duplicates.length > 0) {
+        throw new AppError(
+          `There can be no repeated accessories`,
+          'Bad request',
+          400,
+        );
+      }
+
+      car.acessories = namesAccessory;
+    } else {
+      car.acessories = acessories;
     }
 
     if (year < 1950 || year > 2023) {
@@ -202,7 +208,6 @@ export default class CarService {
     car.color = color;
     car.year = year;
     car.valuePerDay = valuePerDay;
-    car.acessories = namesAccessory;
     car.numberOfPassengers = numberOfPassengers;
 
     await carRepository.save(car);
