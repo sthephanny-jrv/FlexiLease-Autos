@@ -82,32 +82,34 @@ Feito isso a plicação deve estar rodando na porta 3000 (localholst:3000)
 
 Rotas da API REST
 
-The server will run on `http://localhost:3000/v1`
+O servidor será executado em `http://localhost:3000/v1`
 
-Para Usuários:
+Complemento das rotas:
 
-- POST `/user` -> Registrar um usuário
-- POST `/auth` -> Autenticar/logar um usuário (gera um token de autenticação)
-- GET `/user` -> Buscar informações do usuário autenticado
-- PUT `/user` -> Atualizar informações do usuário autenticado
-- DELETE `/user` -> Deleta um usuário autenticado
+- Para Usuários:
 
-Para Caros:
+  - POST `/user` -> Registrar um usuário
+  - POST `/auth` -> Autenticar/logar um usuário (gera um token de autenticação)
+  - GET `/user` -> Buscar informações do usuário autenticado
+  - PUT `/user` -> Atualizar informações do usuário autenticado
+  - DELETE `/user` -> Deleta um usuário autenticado
 
-- POST `/car` -> Registre um carro
-- GET `/car` -> Liste todos os carros
-- GET `/car/:id` -> Liste um carro pelo ID
-- PUT `/car/:id` -> Atualize um carro
-- PATCH `/car/:id` -> Modificação de um acessório específico (esse update pode ser adição ou remoção de um acessório)
-- DELETE `/car/:id` -> Remova um carro
+- Para Caros:
 
-Para Reservas:
+  - POST `/car` -> Registre um carro
+  - GET `/car` -> Liste todos os carros
+  - GET `/car/:id` -> Liste um carro pelo ID
+  - PUT `/car/:id` -> Atualize um carro
+  - PATCH `/car/:id` -> Modificação de um acessório específico (esse update pode ser adição ou remoção de um acessório)
+  - DELETE `/car/:id` -> Remova um carro
 
-- POST `/reserve` -> Registre uma reserva
-- GET `/reserve` -> Liste todas as reservas do usuário autenticado
-- GET `/reserve/:id` -> Busque uma reserva pelo seu ID
-- PUT `/reserve/:id` -> Atualize uma reserva
-- DELETE `/reserve/:id` -> Remova uma reserva
+- Para Reservas:
+
+  - POST `/reserve` -> Registre uma reserva
+  - GET `/reserve` -> Liste todas as reservas do usuário autenticado
+  - GET `/reserve/:id` -> Busque uma reserva pelo seu ID
+  - PUT `/reserve/:id` -> Atualize uma reserva
+  - DELETE `/reserve/:id` -> Remova uma reserva
 
 # Autor
 
