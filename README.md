@@ -22,7 +22,7 @@ Foi desenvolvido na linguagem [TypeScript](https://www.typescriptlang.org/) junt
 
 Toda a documentação foi feita com [Swagger](https://swagger.io/specification/).
 
-Obs: O link da API irá funcionar depois que rodar o projeto (passo 3 do "passo a passo").
+Obs: O link da API irá funcionar depois que rodar o projeto (passo 4 do "passo a passo").
 
 Link da documentação da API: http://localhost:3000/v1/docs/
 
@@ -52,7 +52,7 @@ Além disso, é bom ter um editor para trabalhar com o código como [VSCode](htt
 
 Passo a passo para executar o projeto:
 
-- Baixe o projeto em arquivo zip e abra a pasta no editor de código ou clone este repositório usando o [URL](https://github.com/sthephanny-jrv/FlexiLease-Autos.git).
+- Baixe o projeto em arquivo zip e abra a pasta no editor de código ou clone este repositório usando seu URL: https://github.com/sthephanny-jrv/FlexiLease-Autos.git.
 
 Siga as instruções abaixo para rodar o projeto:
 
