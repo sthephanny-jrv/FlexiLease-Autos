@@ -1,8 +1,6 @@
 <h1 align="center">Projeto FlexiLease Autos</h1>
 <p><img alt="Static Badge" src="https://img.shields.io/badge/license%20-%20ISC%20-%20green"> <img alt="Static Badge" src="https://img.shields.io/badge/version-1.0.0-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/release%20date-october-turquoise"></p>
 
-<p align="center">Este repositório é o projeto <strong>FlexiLease Autos</strong> do Desafio Final da trilha de NODE.JS + AWS_JUL24.</p>
-
 <p align="center">
     <a href="#sobre">Sobre</a> /
     <a href="#tecnologias">Tecnologias</a> /
